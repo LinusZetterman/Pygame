@@ -21,12 +21,11 @@ def createVariables():
 
 def makeTiles():
     for y in range(size["y"]):
-        tiles.append(y)
+        tiles.append([])
         for x in range(size["x"]):
-            tiles[y] = [x]
+            tiles[y].append(x)
+            print(len(tiles))
 
-
-    print(tiles)
 
     for x in range(size["x"]):
         if x % 2:
