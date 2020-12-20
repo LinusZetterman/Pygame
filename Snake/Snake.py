@@ -2,47 +2,83 @@ import pygame
 pygame.init()
 
 def start():
-    global direction, player, map, win, display
+    global direction, head, tail, map, origTiles, coordinates, win, display
 
-    direction = "right"
-    player = {"x": 5, "y": 5, "vel": 1}
+    direction = ""
+    head = {"x": 5, "y": 5, "vel": 1}
+    tail = {"x": 0, "y": 0, "vel": 1}
 
     map = {"width": 30, "height": 20}
+    origTiles = []
+
     win = pygame.display.set_mode((600, 400))
     display = pygame.Surface((30, 20))
 
+def setCoordinates():
+    for x in range(map["width"]):
+        origTiles.append([])
+        for y in range(map["height"]):
+            if x % 2:
+                if y % 2:
+                    origTiles[x].append(0)
+                else:
+                    origTiles[x].append(1)
+            else:
+                if y % 2:
+                    origTiles[x].append(1)
+                else:
+                    origTiles[x].append(0)
+
+    global tiles
+
+    tiles = origTiles
+
+def drawDisplay():
+    for x in range(len(tiles)):
+        for y in range(len(tiles[x])):
+            print(x, y)
+            if tiles[x][y] == 0:
+                display.set_at((x, y), (0, 0, 0))
+            if tiles[x][y] == 1:
+                display.set_at((x, y), (10, 10, 10))
 start()
+setCoordinates()
+
+
 run = True
 
 while run:
     pygame.time.delay(150)
-    if player["x"] < 0 or player["x"] >= map["width"] or player["y"] < 0 or player["y"] >= map["height"]:
+
+    if head["x"] < 0 or head["x"] >= map["width"] or head["y"] < 0 or head["y"] >= map["height"]:
         run = False
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
         elif event.type == pygame.KEYDOWN:
-            if direction == "up" or direction == "down":
+            if direction == "up" or direction == "down" or direction == "":
                 if event.key == pygame.K_LEFT:
                     direction = "left"
                 elif event.key == pygame.K_RIGHT:
                     direction = "right"
-            if direction == "left" or direction == "right":
+            if direction == "left" or direction == "right" or direction == "":
                 if event.key == pygame.K_UP:
                     direction = "up"
                 elif event.key == pygame.K_DOWN:
                     direction = "down"
 
     if direction == "left":
-        player["x"] -= 1
+        head["x"] -= 1
     if direction == "right":
-        player["x"] += 1
+        head["x"] += 1
     if direction == "up":
-        player["y"] -= 1
+        head["y"] -= 1
     if direction == "down":
-        player["y"] += 1
+        head["y"] += 1
 
-    display.set_at((player["x"], player["y"]), (0, 255, 0))
+    drawDisplay()
+
+    display.set_at((head["x"], head["y"]), (0, 255, 0))
 
     surf = pygame.transform.scale(display, (600, 400), win)
     win.blit(surf, (0, 0))
