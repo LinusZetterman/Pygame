@@ -33,14 +33,20 @@ def setCoordinates():
 
     tiles = origTiles
 
+def updateTiles (x, y):
+    if x == head["x"] and y == head["y"]:
+        tiles[x][y] = 3
+
 def drawDisplay():
     for x in range(len(tiles)):
         for y in range(len(tiles[x])):
-            print(x, y)
+            updateTiles(x, y)
             if tiles[x][y] == 0:
                 display.set_at((x, y), (0, 0, 0))
             if tiles[x][y] == 1:
                 display.set_at((x, y), (10, 10, 10))
+            if tiles[x][y] == 3:
+                display.set_at((x, y), (0, 255, 0))
 start()
 setCoordinates()
 
@@ -77,8 +83,6 @@ while run:
         head["y"] += 1
 
     drawDisplay()
-
-    display.set_at((head["x"], head["y"]), (0, 255, 0))
 
     surf = pygame.transform.scale(display, (600, 400), win)
     win.blit(surf, (0, 0))
