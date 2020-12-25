@@ -2,14 +2,15 @@ import pygame
 pygame.init()
 
 def start():
-    global direction, head, tail, map, origTiles, coordinates, win, display
+    global direction, head, tail, map, origTiles, tiles, coordinates, win, display
 
     direction = ""
     head = {"x": 5, "y": 5, "vel": 1}
-    tail = {"x": 0, "y": 0, "vel": 1}
+    tail = {"x": 1, "y": 1, "vel": 1}
 
     map = {"width": 30, "height": 20}
     origTiles = []
+    tiles = []
 
     win = pygame.display.set_mode((600, 400))
     display = pygame.Surface((30, 20))
@@ -17,25 +18,31 @@ def start():
 def setCoordinates():
     for x in range(map["width"]):
         origTiles.append([])
+        tiles.append([])
         for y in range(map["height"]):
             if x % 2:
                 if y % 2:
                     origTiles[x].append(0)
+                    tiles[x].append(0)
                 else:
                     origTiles[x].append(1)
+                    tiles[x].append(1)
             else:
                 if y % 2:
                     origTiles[x].append(1)
+                    tiles[x].append(1)
                 else:
                     origTiles[x].append(0)
+                    tiles[x].append(0)
 
-    global tiles
 
-    tiles = origTiles
 
 def updateTiles (x, y):
     if x == head["x"] and y == head["y"]:
         tiles[x][y] = 3
+    if x == tail["x"] and y == tail["y"]:
+        print(origTiles[x][y])
+        tiles[x][y] = origTiles[x][y]
 
 def drawDisplay():
     for x in range(len(tiles)):
