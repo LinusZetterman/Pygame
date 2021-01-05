@@ -41,7 +41,17 @@ def setCoordinates():
                     origTiles[x].append(0)
                     tiles[x].append(0)
 
+def generateApple ():
+    randX = random.randint(0, map["width"]-1)
+    randY = random.randint(0, map["height"]-1)
 
+    while tiles[randX][randY] == 3:
+        randX = random.randint(0, map["width"]-1) #?
+        randY = random.randint(0, map["height"]-1)
+
+    apple["x"] = randX
+    apple["y"] = randY
+    tail["del"] += 1
 
 def updateTiles (x, y):
     if x == tail["x"] and y == tail["y"]:
@@ -50,11 +60,8 @@ def updateTiles (x, y):
         tiles[x][y] = 3
     if x == apple["x"] and y == apple["y"]:
         tiles[x][y] = 2
-
     if head["x"] == apple["x"] and head["y"] == apple["y"]:
-        apple["x"] = random.randint(0, map["width"])
-        apple["y"] = random.randint(0, map["height"])
-        tail["del"] += 1
+        generateApple()
 
 def drawDisplay():
     for x in range(len(tiles)):
