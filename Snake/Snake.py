@@ -4,7 +4,7 @@ import random
 pygame.init()
 
 def start():
-    global direction, head, moves, delay, tail, map, origTiles, tiles, coordinates, win, display
+    global direction, head, moves, delay, tail, map, origTiles, tiles, coordinates, apple, win, display
 
     direction = ""
     head = {"x": 5, "y": 5, "vel": 1}
@@ -15,6 +15,8 @@ def start():
     map = {"width": 27, "height": 18}
     origTiles = []
     tiles = []
+
+    apple = {"x": random.randint(round(map["width"]/2), map["width"]), "y": random.randint(round(map["height"]/2), map["height"])}
 
     win = pygame.display.set_mode((600, 400))
     display = pygame.Surface((map["width"], map["height"]))
@@ -46,7 +48,13 @@ def updateTiles (x, y):
         tiles[x][y] = origTiles[x][y]
     if x == head["x"] and y == head["y"]:
         tiles[x][y] = 3
+    if x == apple["x"] and y == apple["y"]:
+        tiles[x][y] = 2
 
+    if head["x"] == apple["x"] and head["y"] == apple["y"]:
+        apple["x"] = random.randint(0, map["width"])
+        apple["y"] = random.randint(0, map["height"])
+        tail["del"] += 1
 
 def drawDisplay():
     for x in range(len(tiles)):
@@ -85,8 +93,6 @@ while run:
                     direction = "up"
                 elif event.key == pygame.K_DOWN:
                     direction = "down"
-            if event.key == pygame.K_SPACE:
-                tail["del"] += 1
 
     if direction == "left":
         head["x"] -= 1
@@ -125,6 +131,8 @@ while run:
 
 
     drawDisplay()
+
+    print(apple["x"], apple["y"])
 
     surf = pygame.transform.scale(display, (600, 400), win)
     win.blit(surf, (0, 0))
