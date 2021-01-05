@@ -1,19 +1,23 @@
 import pygame
+import random
+
 pygame.init()
 
 def start():
-    global direction, head, tail, map, origTiles, tiles, coordinates, win, display
+    global direction, head, moves, delay, tail, map, origTiles, tiles, coordinates, win, display
 
     direction = ""
     head = {"x": 5, "y": 5, "vel": 1}
-    tail = {"x": 1, "y": 1, "vel": 1}
 
-    map = {"width": 30, "height": 20}
+    moves = []
+    tail = {"x": 5, "y": 5, "del": 2}
+
+    map = {"width": 27, "height": 18}
     origTiles = []
     tiles = []
 
     win = pygame.display.set_mode((600, 400))
-    display = pygame.Surface((30, 20))
+    display = pygame.Surface((map["width"], map["height"]))
 
 def setCoordinates():
     for x in range(map["width"]):
@@ -38,11 +42,11 @@ def setCoordinates():
 
 
 def updateTiles (x, y):
+    if x == tail["x"] and y == tail["y"]:
+        tiles[x][y] = origTiles[x][y]
     if x == head["x"] and y == head["y"]:
         tiles[x][y] = 3
-    if x == tail["x"] and y == tail["y"]:
-        print(origTiles[x][y])
-        tiles[x][y] = origTiles[x][y]
+
 
 def drawDisplay():
     for x in range(len(tiles)):
@@ -52,6 +56,8 @@ def drawDisplay():
                 display.set_at((x, y), (0, 0, 0))
             if tiles[x][y] == 1:
                 display.set_at((x, y), (10, 10, 10))
+            if tiles[x][y] == 2:
+                display.set_at((x, y), (255, 0, 0))
             if tiles[x][y] == 3:
                 display.set_at((x, y), (0, 255, 0))
 start()
@@ -79,6 +85,8 @@ while run:
                     direction = "up"
                 elif event.key == pygame.K_DOWN:
                     direction = "down"
+            if event.key == pygame.K_SPACE:
+                tail["del"] += 1
 
     if direction == "left":
         head["x"] -= 1
@@ -88,6 +96,33 @@ while run:
         head["y"] -= 1
     if direction == "down":
         head["y"] += 1
+
+    if not direction == "":
+        moves.append(direction)
+        print(moves)
+        print(len(moves))
+
+        if len(moves) > tail["del"]:
+            if moves[0] == "left":
+                tail["x"] -= 1
+            if moves[0] == "right":
+                tail["x"] += 1
+            if moves[0] == "up":
+                tail["y"] -= 1
+            if moves[0] == "down":
+                tail["y"] += 1
+            print("wow")
+        elif len(moves) == tail["del"]:
+            if moves[0] == "left":
+                tail["x"] -= 1
+            if moves[0] == "right":
+                tail["x"] += 1
+            if moves[0] == "up":
+                tail["y"] -= 1
+            if moves[0] == "down":
+                tail["y"] += 1
+            moves.pop(0)
+
 
     drawDisplay()
 
