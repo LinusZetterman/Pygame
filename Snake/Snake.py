@@ -12,7 +12,7 @@ def start():
     moves = []
     tail = {"x": 5, "y": 5, "del": 2}
 
-    map = {"width": 27, "height": 18}
+    map = {"width": 24, "height": 16}
     origTiles = []
     tiles = []
 
@@ -75,14 +75,20 @@ def drawDisplay():
                 display.set_at((x, y), (255, 0, 0))
             if tiles[x][y] == 3:
                 display.set_at((x, y), (0, 255, 0))
-start()
-setCoordinates()
-
 
 run = True
 
+def detectCollision ():
+    if tail["del"] > 2:
+        if tiles[head["x"]][head["y"]] == 3:
+            global run
+            run = False
+
+start()
+setCoordinates()
+
 while run:
-    pygame.time.delay(150)
+    pygame.time.delay(180)
 
     if head["x"] < 0 or head["x"] >= map["width"] or head["y"] < 0 or head["y"] >= map["height"]:
         run = False
@@ -112,8 +118,6 @@ while run:
 
     if not direction == "":
         moves.append(direction)
-        print(moves)
-        print(len(moves))
 
         if len(moves) > tail["del"]:
             if moves[0] == "left":
@@ -124,7 +128,6 @@ while run:
                 tail["y"] -= 1
             if moves[0] == "down":
                 tail["y"] += 1
-            print("wow")
         elif len(moves) == tail["del"]:
             if moves[0] == "left":
                 tail["x"] -= 1
@@ -136,10 +139,8 @@ while run:
                 tail["y"] += 1
             moves.pop(0)
 
-
+    detectCollision()
     drawDisplay()
-
-    print(apple["x"], apple["y"])
 
     surf = pygame.transform.scale(display, (600, 400), win)
     win.blit(surf, (0, 0))
